@@ -8,6 +8,6 @@ namespace Kuk.Services.Services.Note.Implementation
         Task<NoteGetByIdResponse> GetByIdAsync(int id);
         Task<NoteCreateResponse> CreateAsync(NoteCreateRequest request);
         Task<NoteUpdateResponse> UpdateAsync(NoteUpdateRequest request);
-        Task<NoteDeleteResponse> DeleteAsync(NoteDeleteRequest request);
+        Task<NoteDeleteResponse> DeleteAsync(int id);
     }
 }

@@ -164,9 +164,27 @@ namespace Kuk.Services.Services.Note.Implementation
             }
         }
 
-        public Task<NoteDeleteResponse> DeleteAsync(NoteDeleteRequest request)
+        public async Task<NoteDeleteResponse> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var validator = await new GetByIdValidator().ValidateAsync(id);
+                if (!validator.IsValid) return new NoteDeleteResponse { IsSuccess = false, Message = validator.Errors.GetErrors(), Result = ResultType.Warning };
+
+                var noteEntity = await _noteRepository.GetByIdAsync(id);
+                if (noteEntity ==null) return new NoteDeleteResponse { IsSuccess = false, Message = MessagesResource.NotExistData, Result = ResultType.Warning };
+
+                noteEntity.IsDeleted = true;
+                noteEntity.DeleteDateTime = DateTime.Now;
+
+                await _noteRepository.UpdateAsync(noteEntity, true, noteEntity.Id);
+
+                return new NoteDeleteResponse { IsSuccess = true, Message = MessagesResource.DeleteSuccess, Result = ResultType.Success };
+            }
+            catch (Exception e)
+            {
+                return new NoteDeleteResponse { IsSuccess = false, Message = MessagesResource.DeleteFailed, Result = ResultType.Error };
+            }
         }
     }
 }
