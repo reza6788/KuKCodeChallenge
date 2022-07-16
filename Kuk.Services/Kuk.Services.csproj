@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+    <Folder Include="Services\Note\Validation\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kuk.Common\Kuk.Common.csproj" />
+    <ProjectReference Include="..\Kuk.Data\Kuk.Data.csproj" />
+  </ItemGroup>
+
 </Project>
