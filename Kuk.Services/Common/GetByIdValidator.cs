@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Kuk.Common.Messages;
 
 namespace Kuk.Services.Common
 {
@@ -6,8 +7,8 @@ namespace Kuk.Services.Common
     {
         public GetByIdValidator()
         {
-            RuleFor(p => p).NotEmpty().WithMessage("ID must not be empty")
-                .GreaterThan(0).WithMessage("ID must be greater than zero");
+            RuleFor(p => p).NotEmpty().WithMessage(ValidationMessagesResource.IdNotEmpty)
+                .GreaterThan(0).WithMessage(ValidationMessagesResource.IdGtZero);
         }
     }
 }

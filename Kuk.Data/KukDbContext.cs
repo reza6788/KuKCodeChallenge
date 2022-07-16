@@ -12,13 +12,11 @@ namespace Kuk.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new UserConfig());
             builder.ApplyConfiguration(new NoteConfig());
 
             base.OnModelCreating(builder);
         }
 
-        public DbSet<UserEntity> Users;
         public DbSet<NoteEntity> Notes;
     }
 }

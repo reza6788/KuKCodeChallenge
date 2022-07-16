@@ -4,9 +4,6 @@ using Kuk.Common.Utilities;
 using Kuk.Data.IRepositories;
 using Kuk.Entities.EntityModels;
 using Kuk.Services.Common;
-using Kuk.Services.Services.Error.Implementation;
-using Kuk.Services.Services.Error.Messaging;
-using Kuk.Services.Services.Error.ViewModel;
 using Kuk.Services.Services.Note.Messaging;
 using Kuk.Services.Services.Note.Validation;
 using Kuk.Services.Services.Note.ViewModel;
@@ -17,12 +14,10 @@ namespace Kuk.Services.Services.Note.Implementation
     public class NoteService : INoteService
     {
         private readonly INoteRepository _noteRepository;
-        private readonly IErrorService _errorService;
 
-        public NoteService(INoteRepository noteRepository, IErrorService errorService)
+        public NoteService(INoteRepository noteRepository)
         {
             _noteRepository = noteRepository;
-            _errorService = errorService;
         }
 
         public NoteGetAllPageResponse GetAllPaged(NoteGetAllPageRequest request)
@@ -31,9 +26,7 @@ namespace Kuk.Services.Services.Note.Implementation
             {
                 var noteGetAllPageResponseVms = new List<NoteGetAllPageResponseVm>();
                 var query = _noteRepository.TableNoTracking
-                    .Where(p => !p.IsDeleted && (string.IsNullOrEmpty(request.Search) ||
-                                                 p.Title.Contains(request.Search) ||
-                                                 p.TextBody.Contains(request.Search))).AsQueryable();
+                    .Where(p => !p.IsDeleted && (string.IsNullOrEmpty(request.Search) || p.Title.Contains(request.Search) || p.TextBody.Contains(request.Search))).AsQueryable();
                 var noteEntities = query.ToList().Skip(request.PageSize).Take(request.Page);
 
                 foreach (var noteEntity in noteEntities)
@@ -57,21 +50,11 @@ namespace Kuk.Services.Services.Note.Implementation
             }
             catch (Exception e)
             {
-                _errorService.AddError(new AddErrorRequest
-                {
-                    Entity = new AddErrorVm
-                    {
-                        ServiceName = nameof(NoteService),
-                        ActionName = nameof(GetAllPaged),
-                        Table = nameof(TableType.Note),
-                        Exception = e
-                    }
-                });
                 return new NoteGetAllPageResponse
                 {
                     IsSuccess = false,
                     Message = MessagesResource.GetFailed,
-                    Result = ResultType.Error
+                    Result = ResultType.Error,
                 };
             }
         }
@@ -98,16 +81,6 @@ namespace Kuk.Services.Services.Note.Implementation
             }
             catch (Exception e)
             {
-                _errorService.AddError(new AddErrorRequest
-                {
-                    Entity = new AddErrorVm
-                    {
-                        ServiceName = nameof(NoteService),
-                        ActionName = nameof(GetByIdAsync),
-                        Table = nameof(TableType.Note),
-                        Exception = e
-                    }
-                });
                 return new NoteGetByIdResponse
                 {
                     IsSuccess = false,
@@ -145,16 +118,6 @@ namespace Kuk.Services.Services.Note.Implementation
             }
             catch (Exception e)
             {
-                _errorService.AddError(new AddErrorRequest
-                {
-                    Entity = new AddErrorVm
-                    {
-                        ServiceName = nameof(NoteService),
-                        ActionName = nameof(CreateAsync),
-                        Table = nameof(TableType.Note),
-                        Exception = e
-                    }
-                });
                 return new NoteCreateResponse
                 {
                     IsSuccess = false,
@@ -164,9 +127,41 @@ namespace Kuk.Services.Services.Note.Implementation
             }
         }
 
-        public Task<NoteUpdateResponse> UpdateAsync(NoteUpdateRequest request)
+        public async Task<NoteUpdateResponse> UpdateAsync(NoteUpdateRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var validator = await new UpdateNoteValidator().ValidateAsync(request.Entity);
+                if (!validator.IsValid) return new NoteUpdateResponse { Message = validator.Errors.GetErrors(), Result = ResultType.Warning };
+
+                var existNote = await _noteRepository.TableNoTracking.AnyAsync(p => p.Id != request.Entity.Id && p.Title == request.Entity.Title);
+                if (existNote) { return new NoteUpdateResponse { IsSuccess = false, Message = MessagesResource.DuplicateData, Result = ResultType.Warning }; }
+
+                var noteEntity = await _noteRepository.GetByIdAsync(request.Entity.Id);
+                if (noteEntity == null) return new NoteUpdateResponse { Message = MessagesResource.NotExistData, Result = ResultType.Warning };
+
+                noteEntity.Title = request.Entity.Title;
+                noteEntity.TextBody = request.Entity.TextBody;
+                noteEntity.LastChangeDateTime = DateTime.Now;
+
+                await _noteRepository.UpdateAsync(noteEntity, true, noteEntity.Id);
+
+                return new NoteUpdateResponse
+                {
+                    IsSuccess = true,
+                    Message = MessagesResource.EditSuccess,
+                    Result = ResultType.Success
+                };
+            }
+            catch (Exception e)
+            {
+                return new NoteUpdateResponse
+                {
+                    IsSuccess = false,
+                    Message = MessagesResource.EditFailed,
+                    Result = ResultType.Error
+                };
+            }
         }
 
         public Task<NoteDeleteResponse> DeleteAsync(NoteDeleteRequest request)

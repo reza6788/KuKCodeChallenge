@@ -21,7 +21,7 @@ namespace Kuk.Data.Common
 
         #region Async Method
 
-        public virtual ValueTask<TEntity> GetByIdAsync(params object[] ids)
+        public virtual ValueTask<TEntity?> GetByIdAsync(params object[] ids)
         {
             return Entities.FindAsync(ids);
         }

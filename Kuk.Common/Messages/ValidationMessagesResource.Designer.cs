@@ -61,6 +61,24 @@ namespace Kuk.Common.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Id must be greater than zero.
+        /// </summary>
+        public static string IdGtZero {
+            get {
+                return ResourceManager.GetString("IdGtZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Id must not be empty.
+        /// </summary>
+        public static string IdNotEmpty {
+            get {
+                return ResourceManager.GetString("IdNotEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The number of characters is more than the allowed amount.
         /// </summary>
         public static string InvalidMaxLength {

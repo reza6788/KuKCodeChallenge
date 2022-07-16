@@ -25,7 +25,7 @@ namespace Kuk.Data.Common
 
         void Detach(TEntity entity);
         TEntity GetById(params object[] ids);
-        ValueTask<TEntity> GetByIdAsync(params object[] ids);
+        ValueTask<TEntity?> GetByIdAsync(params object[] ids);
 
         void Update(TEntity entity, bool saveNow = true, params object[] ids);
 
