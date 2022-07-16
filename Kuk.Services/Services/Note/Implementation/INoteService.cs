@@ -4,7 +4,7 @@ namespace Kuk.Services.Services.Note.Implementation
 {
     public interface INoteService
     {
-        public Task<NoteGetAllPageResponse> GetAllPagedAsync(NoteGetAllPageRequest request);
+        NoteGetAllPageResponse GetAllPaged(NoteGetAllPageRequest request);
         Task<NoteGetByIdResponse> GetByIdAsync(int id);
         Task<NoteCreateResponse> CreateAsync(NoteCreateRequest request);
         Task<NoteUpdateResponse> UpdateAsync(NoteUpdateRequest request);

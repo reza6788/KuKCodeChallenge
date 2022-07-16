@@ -16,5 +16,10 @@
         Failed = 2,
         Duplicate = 3,
         NotValid = 4,
+    }  
+    
+    public enum TableType
+    {
+        Note = 1,
     }
 }
