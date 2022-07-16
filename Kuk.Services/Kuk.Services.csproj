@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configuration\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Kuk.Common\Kuk.Common.csproj" />
     <ProjectReference Include="..\Kuk.Data\Kuk.Data.csproj" />
   </ItemGroup>
