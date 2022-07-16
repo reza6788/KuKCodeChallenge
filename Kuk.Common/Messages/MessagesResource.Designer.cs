@@ -97,6 +97,15 @@ namespace Kuk.Common.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The entered information is duplicated.
+        /// </summary>
+        public static string DuplicateData {
+            get {
+                return ResourceManager.GetString("DuplicateData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Editing failed.
         /// </summary>
         public static string EditFailed {

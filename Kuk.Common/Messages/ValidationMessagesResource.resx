@@ -117,34 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddFailed" xml:space="preserve">
-    <value>Registration failed</value>
+  <data name="InvalidMaxLength" xml:space="preserve">
+    <value>The number of characters is more than the allowed amount</value>
   </data>
-  <data name="AddSuccess" xml:space="preserve">
-    <value>Registration was done successfully</value>
+  <data name="TextBodyNotEmpty" xml:space="preserve">
+    <value>The text should not be empty</value>
   </data>
-  <data name="DeleteFailed" xml:space="preserve">
-    <value>Deletion failed</value>
-  </data>
-  <data name="DeleteSuccess" xml:space="preserve">
-    <value>The deletion was successful</value>
-  </data>
-  <data name="DuplicateData" xml:space="preserve">
-    <value>The entered information is duplicated</value>
-  </data>
-  <data name="EditFailed" xml:space="preserve">
-    <value>Editing failed</value>
-  </data>
-  <data name="EditSuccess" xml:space="preserve">
-    <value>Editing was done successfully</value>
-  </data>
-  <data name="GetFailed" xml:space="preserve">
-    <value>There was an error receiving information</value>
-  </data>
-  <data name="GetSuccess" xml:space="preserve">
-    <value>The information was received successfully</value>
-  </data>
-  <data name="NotExistData" xml:space="preserve">
-    <value>No information found</value>
+  <data name="TitleNotEmpty" xml:space="preserve">
+    <value>The title should not be empty</value>
   </data>
 </root>
