@@ -7,8 +7,7 @@ namespace Kuk.Services.Common
     {
         public GetByIdValidator()
         {
-            RuleFor(p => p).NotEmpty().WithMessage(ValidationMessagesResource.IdNotEmpty)
-                .GreaterThan(0).WithMessage(ValidationMessagesResource.IdGtZero);
+            RuleFor(p => p).GreaterThan(0).WithMessage(ValidationMessagesResource.IdGtZero);
         }
     }
 }

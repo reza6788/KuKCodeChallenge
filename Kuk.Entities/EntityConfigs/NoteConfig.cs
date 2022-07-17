@@ -12,6 +12,7 @@ namespace Kuk.Entities.EntityConfigs
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Id).IsRequired();
             builder.Property(p => p.Title).IsRequired();
+            builder.Property(p => p.Title).HasMaxLength(50);
             builder.Property(p => p.TextBody).IsRequired();
             builder.Property(p => p.CreateDateTime).IsRequired();
         }

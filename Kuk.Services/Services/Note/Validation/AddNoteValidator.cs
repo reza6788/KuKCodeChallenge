@@ -9,7 +9,7 @@ namespace Kuk.Services.Services.Note.Validation
         public AddNoteValidator()
         {
             RuleFor(p => p.Title).NotEmpty().WithMessage(ValidationMessagesResource.TitleNotEmpty)
-                .MaximumLength(30).WithMessage(ValidationMessagesResource.InvalidMaxLength);
+                .MaximumLength(50).WithMessage(ValidationMessagesResource.InvalidMaxLength);
             RuleFor(p => p.TextBody).NotEmpty().WithMessage(ValidationMessagesResource.TextBodyNotEmpty);
 
         }

@@ -6,6 +6,9 @@ namespace Kuk.Data
 {
     public class KukDbContext : DbContext
     {
+        public KukDbContext()
+        {
+        }
         public KukDbContext(DbContextOptions<KukDbContext> options) : base(options)
         {
         }
@@ -17,6 +20,6 @@ namespace Kuk.Data
             base.OnModelCreating(builder);
         }
 
-        public DbSet<NoteEntity> Notes;
+        public DbSet<NoteEntity> Notes { get; set; }
     }
 }

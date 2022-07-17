@@ -24,24 +24,16 @@ namespace Kuk.Services.Services.Note.Implementation
         {
             try
             {
-                var noteGetAllPageResponseVms = new List<NoteGetAllPageResponseVm>();
                 var query = _noteRepository.TableNoTracking
                     .Where(p => !p.IsDeleted && (string.IsNullOrEmpty(request.Search) || p.Title.Contains(request.Search) || p.TextBody.Contains(request.Search))).AsQueryable();
-                var noteEntities = query.ToList().Skip(request.PageSize).Take(request.Page);
 
-                foreach (var noteEntity in noteEntities)
-                {
-                    noteGetAllPageResponseVms.Add(new NoteGetAllPageResponseVm
-                    {
-                        Id = noteEntity.Id,
-                        Title = noteEntity.Title,
-                        Summary = noteEntity.TextBody.Trim().Substring(0, 20),
-                    });
-                }
+                var noteEntities = query
+                    .Select(s => new NoteGetAllPageResponseVm { Id = s.Id, Title = s.Title, TextBody = s.TextBody })
+                    .ToList().Skip((request.Page - 1) * request.PageSize).Take(request.PageSize);
 
                 return new NoteGetAllPageResponse
                 {
-                    Entity = noteGetAllPageResponseVms,
+                    Entity = noteEntities.ToList(),
                     RowCount = query.Count(),
                     IsSuccess = true,
                     Message = MessagesResource.GetSuccess,
@@ -95,15 +87,10 @@ namespace Kuk.Services.Services.Note.Implementation
             try
             {
                 var validator = await new AddNoteValidator().ValidateAsync(request.Entity);
-                if (!validator.IsValid)
-                    return new NoteCreateResponse
-                    {
-                        Message = validator.Errors.GetErrors(),
-                        Result = ResultType.Warning
-                    };
+                if (!validator.IsValid) return new NoteCreateResponse { Message = validator.Errors.GetErrors(), Result = ResultType.Warning };
 
-                var existUser = await _noteRepository.TableNoTracking.AnyAsync(p => p.Title == request.Entity.Title);
-                if (existUser) return new NoteCreateResponse { IsSuccess = false, Message = MessagesResource.DuplicateData, Result = ResultType.Warning };
+                var existNote = await _noteRepository.TableNoTracking.AnyAsync(p => p.Title == request.Entity.Title);
+                if (existNote) return new NoteCreateResponse { IsSuccess = false, Message = MessagesResource.DuplicateData, Result = ResultType.Warning };
 
                 var noteEntity = new NoteEntity { Title = request.Entity.Title, TextBody = request.Entity.TextBody, CreateDateTime = DateTime.Now, };
 
@@ -172,7 +159,7 @@ namespace Kuk.Services.Services.Note.Implementation
                 if (!validator.IsValid) return new NoteDeleteResponse { IsSuccess = false, Message = validator.Errors.GetErrors(), Result = ResultType.Warning };
 
                 var noteEntity = await _noteRepository.GetByIdAsync(id);
-                if (noteEntity ==null) return new NoteDeleteResponse { IsSuccess = false, Message = MessagesResource.NotExistData, Result = ResultType.Warning };
+                if (noteEntity == null) return new NoteDeleteResponse { IsSuccess = false, Message = MessagesResource.NotExistData, Result = ResultType.Warning };
 
                 noteEntity.IsDeleted = true;
                 noteEntity.DeleteDateTime = DateTime.Now;
