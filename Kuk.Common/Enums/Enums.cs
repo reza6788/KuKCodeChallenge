@@ -10,14 +10,6 @@
         Question = 6,
     }
 
-    public enum ResultStatus
-    {
-        Success = 1,
-        Failed = 2,
-        Duplicate = 3,
-        NotValid = 4,
-    }  
-    
     public enum TableType
     {
         Note = 1,

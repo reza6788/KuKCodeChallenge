@@ -14,9 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(x => { x.RegisterModule(new ServiceModule()); });
 
-//builder.Services.AddScoped<INoteRepository, NoteRepository>();
-//builder.Services.AddScoped<INoteService, NoteService>();
-
 // Add services to the container.
 builder.Services.AddDbContext<KukDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WebApiDatabase"),
@@ -31,8 +28,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
-ILifetimeScope autofacContainer = ((IApplicationBuilder)app).ApplicationServices.GetAutofacRoot();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

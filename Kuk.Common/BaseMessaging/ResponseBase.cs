@@ -7,7 +7,6 @@ namespace Kuk.Common.BaseMessaging
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
         public ResultType Result { get; set; }
-        public ResultStatus ResultStatus { get; set; }
     }
 
     public abstract class ResponseBase<TEntity> : ResponseBase
